@@ -1,0 +1,4 @@
+﻿.idea/
+build/
+cmake-build-*/
+deps/raylib/
