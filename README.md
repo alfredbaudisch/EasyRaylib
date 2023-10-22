@@ -1,7 +1,12 @@
-﻿## Getting Started
+﻿Template to make it easy to code raylib projects with C:
+- Can be built with either make or CMake, as it contains essential Makefile and CMake files.
+- raylib added as a dependency in a subfolder, so it can be updated and debugged with the project.
+- Contains VSCode configuration.
+
+## Getting Started
 Clone with submodules:
 ```
-git clone --recurse-submodules https://github.com/alfredbaudisch/path_to_repo
+git clone --recurse-submodules https://github.com/alfredbaudisch/EasyRaylib
 ```
 
 To update:
