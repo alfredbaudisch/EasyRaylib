@@ -1,7 +1,8 @@
 ﻿Template to make it easy to code raylib projects with C:
 - Can be built with either make or CMake, as it contains essential Makefile and CMake files.
-- raylib added as a dependency in a subfolder, so it can be updated and debugged with the project.
+- raylib added as a dependency in a subfolder, so it can be changed, debugged and introspected with the project.
 - Contains VSCode configuration.
+- Direct control over compiling both raylib and the project to release.
 
 ## Getting Started
 Clone with submodules:
