@@ -39,6 +39,7 @@
                 "args": [
                     "RAYLIB_PATH=P:/Dev/gamedev/projects/raylib_pardall/deps/raylib",
                     "PROJECT_NAME=game",
+                    "MODE=RELEASE",
                     "OBJS=${fileBasenameNoExtension}.c"
                 ]
             },
