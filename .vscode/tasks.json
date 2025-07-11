@@ -5,7 +5,9 @@
             "label": "build debug",
             "type": "process",
             "command": "make",
-            "args": [],
+            "args": [
+                "game"
+            ],
             "windows": {
                 "command": "mingw32-make.exe"
             },
@@ -19,7 +21,8 @@
             "type": "process",
             "command": "make",
             "args": [
-                "MODE=RELEASE"
+                "MODE=RELEASE",
+                "game"
             ],
             "windows": {
                 "command": "mingw32-make.exe"
@@ -28,6 +31,47 @@
             "problemMatcher": [
                 "$gcc"
             ]
+        },
+        {
+            "label": "make game",
+            "type": "process",
+            "command": "make",
+            "args": [
+                "game"
+            ],
+            "windows": {
+                "command": "mingw32-make.exe"
+            },
+            "group": "build",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            }
+        },
+        {
+            "label": "run game",
+            "type": "process",
+            "command": "./build/game",
+            "windows": {
+                "command": ".\\build\\game.exe"
+            },
+            "dependsOn": "build debug",
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "new",
+                "showReuseMessage": false,
+                "clear": true
+            }
         },
         {
             "label": "clean",

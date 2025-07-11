@@ -62,7 +62,7 @@ OBJECTS = $(addprefix $(BUILD_DIR)/, $(notdir $(SOURCES:.c=.o)))
 # =====================================
 # Targets
 # =====================================
-all: info raylib game
+all: info raylib game run
 
 info:
 	@echo "> Detected OS: $(OS)"
@@ -79,6 +79,8 @@ ifeq ($(OS),MACOS)
 else
 	$(CC) -o $(BUILD_DIR)/$(EXECUTABLE_NAME)$(EXECUTABLE_EXT) $(OBJECTS) $(CFLAGS) $(LDFLAGS)
 endif
+
+run: game
 	$(BUILD_DIR)/$(EXECUTABLE_NAME)$(EXECUTABLE_EXT)
 
 # The -MMD option tells gcc to generate dependency files.
@@ -103,6 +105,6 @@ endif
 
 # The .PHONY directive tells make that these targets
 # are not associated with actual files
-.PHONY: all info raylib game clean
+.PHONY: all info raylib game run clean
 
 -include $(BUILD_DIR)/*.d
