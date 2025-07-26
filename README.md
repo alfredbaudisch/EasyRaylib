@@ -23,6 +23,7 @@ Currently I only have a Macbook, and I managed to build on a Windows VM, but I w
 - The game/application code goes in `game.c`.
 - For debug and release builds, `main.c` is used instead.
 - In the hot reload workflow, the game is built as a shared library. In the debug and release builds, a standalone application is built.
+- To watch for file changes, additions and removals in real-time, [file_version_builder.c](src/hot_reload/file_version_builder.c) keeps a list of source files and their modification times (into a dev temp file `file_versions.dat`) and [file_versions.h](src/hot_reload/file_versions.h) watches that list.
 
 ## Extra Features
 - For Debug and Release the project can be built with either make or CMake, as it contains essential Makefile and CMake files.
