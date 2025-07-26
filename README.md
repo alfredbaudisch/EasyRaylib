@@ -3,7 +3,7 @@ This is a C + Raylib game template with a Hot Reloading workflow. It makes it po
 
 Once the application is built and running, you don't need to run build commands anymore, hot reload kicks in automatically as soon as you edit and save any source file.
 
-Supported platforms: macOS, Linux and Windows (untested).
+Supported platforms: macOS (tested, fully working), Linux (untested) and Windows (untested).
 
 ![c-raylib-hot-reload-sample](https://github.com/user-attachments/assets/8b15bac3-59cf-4e3b-bb4d-9a5b43bfbb3e)
 
