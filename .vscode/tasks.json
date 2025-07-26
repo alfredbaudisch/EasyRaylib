@@ -2,6 +2,51 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Hot Reload: Build",
+            "type": "shell",
+            "windows": {
+                "command": "${workspaceFolder}/build_hot_reload.bat"
+            },
+            "osx": {
+                "command": "${workspaceFolder}/build_hot_reload.sh"
+            },
+            "linux": {
+                "command": "${workspaceFolder}/build_hot_reload.sh"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Hot Reload: Build and Run",
+            "type": "shell",
+            "windows": {
+                "command": "${workspaceFolder}/build_hot_reload.bat",
+            },
+            "osx": {
+                "command": "${workspaceFolder}/build_hot_reload.sh",
+            },
+            "linux": {
+                "command": "${workspaceFolder}/build_hot_reload.sh",
+            },
+            "args": [
+                "run"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+        },
+        {
             "label": "build debug",
             "type": "process",
             "command": "make",

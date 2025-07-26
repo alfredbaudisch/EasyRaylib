@@ -51,6 +51,7 @@ add_subdirectory(${RAYLIB_PATH} raylib)
 
 # Game target
 file(GLOB GAME_SOURCES src/*.c)
+list(REMOVE_ITEM GAME_SOURCES "${CMAKE_SOURCE_DIR}/src/main_hot_reload.c")
 add_executable(${PROJECT_NAME} ${GAME_SOURCES})
 
 # Platform-specific linking

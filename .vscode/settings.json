@@ -8,5 +8,11 @@
 		"**/*.o": true,
 		"**/*.exe": true
 	},
-	"C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
+	"C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+	"files.associations": {
+		"locale": "cpp",
+		"file_versions.h": "c",
+		"platform_tools.h": "c",
+		"stat.h": "c"
+	}
 }

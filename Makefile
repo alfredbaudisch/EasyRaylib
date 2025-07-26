@@ -35,8 +35,7 @@ ifeq ($(OS),MACOS)
     RAYLIB_MAKE_PLATFORM = PLATFORM=PLATFORM_DESKTOP
 else
     CC = gcc
-    COMPILER_PATH = C:/Dev/msys2/mingw64
-    LDFLAGS = -L$(RELEASE_PATH)/lib -lraylib -lopengl32 -lgdi32 -lwinmm
+    LDFLAGS = $(RAYLIB_PATH)/src/libraylib.a -lopengl32 -lgdi32 -lwinmm
     EXECUTABLE_EXT = .exe
     RAYLIB_MAKE_PLATFORM = PLATFORM=PLATFORM_DESKTOP
 endif
@@ -54,7 +53,7 @@ CURRENT_DIRECTORY = .
 EXECUTABLE_NAME = game
 
 # List all .c files in the src subfolder
-SOURCES = $(wildcard src/*.c)
+SOURCES := $(filter-out src/main_hot_reload.c, $(wildcard src/*.c))
 # Generate a list of object files from source files
 OBJECTS = $(addprefix $(BUILD_DIR)/, $(notdir $(SOURCES:.c=.o)))
 # =====================================
@@ -97,14 +96,23 @@ clean:
 	@$(RMDIR) $(BUILD_DIR)
 ifeq ($(OS),MACOS)
 	@cd $(RAYLIB_PATH)/src && $(MAKE) clean
+	@rm -rf game_hot_reload.dSYM
+	@rm -rf game_hot_reload
 else
 	@cd $(RAYLIB_PATH)/src && $(RM) *.o && $(RM) libraylib.a
 endif
 
 # =====================================
 
+# Raylib API wrapper for hot-reload
+generate_raylib_api:
+	@echo "> Generating raylib_api.h..."
+	python3 generate_raylib_api.py
+
+# =====================================
+
 # The .PHONY directive tells make that these targets
 # are not associated with actual files
-.PHONY: all info raylib game run clean
+.PHONY: all info raylib game run clean generate_raylib_api
 
 -include $(BUILD_DIR)/*.d

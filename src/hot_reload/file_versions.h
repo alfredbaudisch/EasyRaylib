@@ -1,0 +1,74 @@
+#include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include "platform_tools.h"
+
+typedef struct {
+    const char* path;
+    time_t modification_time;
+} FileVersion;
+
+FileVersion *file_versions;
+int file_versions_count;
+
+bool file_versions_reload() {
+    FILE *file = fopen("src/hot_reload/file_versions.dat", "r");
+    if (!file) {
+        printf("[FILE_VERSIONS] Failed to open file_versions.dat\n");
+        return false;
+    }
+    
+    int new_count;
+    if (fscanf(file, "%d\n", &new_count) != 1) {
+        printf("[FILE_VERSIONS] Failed to read count from data file\n");
+        fclose(file);
+        return false;
+    }
+
+    if(new_count != file_versions_count) {
+        free(file_versions);
+        file_versions = (FileVersion*)malloc(new_count * sizeof(FileVersion));
+        file_versions_count = new_count;
+    }
+
+    for (int i = 0; i < new_count; i++) {
+        char path[512];
+        time_t mod_time;
+        
+        if (fscanf(file, "%511s %ld\n", path, &mod_time) != 2) {
+            printf("[FILE_VERSIONS] Failed to read file entry %d\n", i);
+            fclose(file);  
+            return false;
+        }
+
+        file_versions[i].path = strdup(path);
+        file_versions[i].modification_time = mod_time;
+    }
+
+    fclose(file);
+    return true;
+}
+
+bool file_versions_check() {
+    for (int i = 0; i < file_versions_count; i++) {
+        time_t mod_time = platform_get_modification_time(file_versions[i].path);
+        if (mod_time == 0) {
+            printf("[FILE_VERSIONS] Failed getting modification time of %s, maybe deleted? Rebuilding file versions and hot reloading...\n", file_versions[i].path);
+
+            int build_result = system("./build_hot_reload.sh");
+            if (build_result != 0) {
+                printf("[FILE_VERSIONS] Build failed with exit code: %d\n", build_result);
+                exit(1);
+                return false;
+            }
+        }
+        if (mod_time != file_versions[i].modification_time) {
+            printf("[FILE_VERSIONS] File %s has changed (disk: %ld, memory: %ld)\n", 
+                   file_versions[i].path, mod_time, file_versions[i].modification_time);
+            return true;
+        }
+    }
+    return false;
+}

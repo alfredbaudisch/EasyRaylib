@@ -4,6 +4,30 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+        // Hot Reload configs
+        // Windows configs (only difference from linux/mac is "type" and "program")
+        {
+            "type": "cppvsdbg",
+            "request": "launch",
+            "preLaunchTask": "Hot Reload: Build and Run",
+            "name": "Hot Reload: Build and Run (Windows)",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/game_hot_reload.exe",
+        },
+
+        // Linux / Mac configs
+        {
+            "type": "lldb",
+            "request": "launch",
+            "preLaunchTask": "Hot Reload: Build and Run",
+            "name": "Hot Reload: Build and Run (Linux / Mac)",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/build/hot_reload/game_hot_reload",
+        },
+
+        // Make Debug and Release configs
         {
             "name": "Debug (Make)",
             "type": "cppdbg",
@@ -64,6 +88,8 @@
             },
             "preLaunchTask": "build release"
         },
+
+        // CMake Debug and Release configs
         {
             "name": "Debug (CMake)",
             "type": "cppdbg",
