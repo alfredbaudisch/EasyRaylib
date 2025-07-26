@@ -6,7 +6,13 @@
 		"**/CVS": true,
 		"**/.DS_Store": true,
 		"**/*.o": true,
-		"**/*.exe": true,
+		"**/*.exe": true
 	},
-	"C_Cpp.default.compilerPath": "C:\\Dev\\msys2\\mingw64\\bin\\gcc.exe"
+	"C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+	"files.associations": {
+		"locale": "cpp",
+		"file_versions.h": "c",
+		"platform_tools.h": "c",
+		"stat.h": "c"
+	}
 }
