@@ -22,6 +22,7 @@ Currently I only have a Macbook, and I managed to build on a Windows VM, but I w
 - The host hot reload application is in `main_hot_reload.c`.
 - The game/application code goes in `game.c`.
 - For debug and release builds, `main.c` is used instead.
+- In the hot reload workflow, the game is built as a shared library. In the debug and release builds, a standalone application is built.
 
 ## Extra Features
 - For Debug and Release the project can be built with either make or CMake, as it contains essential Makefile and CMake files.
