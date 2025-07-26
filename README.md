@@ -12,11 +12,11 @@ Currently I only have a Macbook, and I managed to build on a Windows VM, but I w
 
 ## How to run the Hot Reload workflow
 - Open the project, run `./build_hot_reload.sh run` (or `./build_hot_reload.bat run`).
+- In VSCode, instead of manually running the build scripts, with `F5`, you can run the tasks `Hot Reload: Build and Run (Linux / Mac)` (or Windows).
 - Make changes to `game.c` (or any other related file, you can also add and remove files, as the hot reload workflow account for added and remove files).
 - Watch as the game reloads as soon as you hit save.
 - To force rebuild, while the game is running, you can call `./build_hot_reload.sh` (without `run`).
 - In the sample project, you can reload the game library with `F5` or restart it (reset state) with `F6`.
-- In VSCode, instead of manually running the build scripts, with `F5`, you can run the tasks `Hot Reload: Build and Run (Linux / Mac)` (or Windows).
 
 ### How it Works
 - The host hot reload application is in `main_hot_reload.c`.
@@ -33,7 +33,7 @@ Currently I only have a Macbook, and I managed to build on a Windows VM, but I w
 ## Getting Started
 Clone with submodules:
 ```
-git clone --recurse-submodules https://github.com/alfredbaudisch/EasyRaylib
+git clone --recurse-submodules https://github.com/alfredbaudisch/raylib_hot_reload_template
 ```
 
 To update:
