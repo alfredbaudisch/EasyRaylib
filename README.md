@@ -73,5 +73,10 @@ The same requirements as raylib.
   - Add the MSYS2 and mingw64 paths to PATH, example: `C:\Dev\msys2\usr\bin` and `C:\Dev\msys2\mingw64\bin`.
 - CMake
 
+## A note about the Raylib generated API and Raylib version
+- [raylib_api.gen.h](src/hot_reload/raylib_api.gen.h) is used by the hot reload workflow. `raylib_api.gen.h` is transparent during development, as long as `HOT_RELOAD` is not defined in the editor/IDE, it's `raylib.h` that will normally show up in auto completions and the like. 
+- A standalone/normal build (for debug or release) uses `raylib.h` directly.
+- If you change to a different version of raylib either by a major release or another commit hash in the submodule, you have to rebuild `raylib_api.gen.h`, for that you need Python3 then simply run `make generate_raylib_api` or `python3 generate_raylib_api.py`.
+
 ## Acknowledgements
 This is heavily inspired and adapted from [Odin + Raylib + Hot Reload template](https://github.com/karl-zylinski/odin-raylib-hot-reload-game-template) by Karl Zylinski (where I also did some small contributions).
