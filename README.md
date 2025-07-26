@@ -5,6 +5,8 @@ Once the application is built and running, you don't need to run build commands 
 
 Supported platforms: macOS, Linux and Windows (untested).
 
+![c-raylib-hot-reload-sample](https://github.com/user-attachments/assets/8b15bac3-59cf-4e3b-bb4d-9a5b43bfbb3e)
+
 ## WARNING about Windows ⚠️
 Currently I only have a Macbook, and I managed to build on a Windows VM, but I wasn't able to run it due to the lack of OpenGL support on Parallels. So I'm looking for contributors to make sure the Windows setup works.
 
