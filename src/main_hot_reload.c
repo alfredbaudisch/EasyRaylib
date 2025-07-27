@@ -233,6 +233,9 @@ int main() {
                     unload_game_api(&game_api);
                     game_api = new_game_api;
                     game_api.set_raylib_api(raylib_api);
+
+                    void* game_memory = game_api.memory();
+                    free(game_memory);
                     game_api.init();
                 }
                 
