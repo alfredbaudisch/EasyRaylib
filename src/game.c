@@ -23,14 +23,6 @@ typedef struct GameMemory {
 
 static GameMemory* g_mem = NULL;
 
-#ifdef HOT_RELOAD
-RaylibAPI* rl = NULL;
-
-void game_set_raylib_api(RaylibAPI* api) {
-    rl = api;
-}
-#endif
-
 void game_hot_reloaded(void* mem) {
     g_mem = (GameMemory*)mem;
 }

@@ -15,6 +15,11 @@
     #endif
 
     EXPORT void game_set_raylib_api(RaylibAPI* api);
+
+    RaylibAPI* rl = NULL;
+    void game_set_raylib_api(RaylibAPI* api) {
+        rl = api;
+    }
 #else
     #define EXPORT
     #include "raylib.h"
