@@ -57,7 +57,11 @@ bool file_versions_check() {
         if (mod_time == 0) {
             printf("[FILE_VERSIONS] Failed getting modification time of %s, maybe deleted? Rebuilding file versions and hot reloading...\n", file_versions[i].path);
 
+#ifdef _WIN32
+            int build_result = system("build_hot_reload.bat");
+#else
             int build_result = system("./build_hot_reload.sh");
+#endif
             if (build_result != 0) {
                 printf("[FILE_VERSIONS] Build failed with exit code: %d\n", build_result);
                 exit(1);
