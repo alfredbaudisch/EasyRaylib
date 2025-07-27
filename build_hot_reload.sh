@@ -106,6 +106,5 @@ echo ""
 
 if [ $# -ge 1 ] && [ "$1" == "run" ]; then
     echo "Running $EXE"
-    ./$OUT_DIR/$EXE &
-    echo "Game started in background (PID: $!)"
+    ./$OUT_DIR/$EXE
 fi 
