@@ -6,7 +6,7 @@
 #include <time.h>
 
 #include "hot_reload/platform_tools.h"
-#include "hot_reload/file_versions.h"
+#include "hot_reload/file_watcher.h"
 #include "hot_reload/raylib_api.gen.h"
 
 #ifdef __APPLE__
@@ -43,7 +43,7 @@ typedef struct {
     bool (*force_restart)(void);
     time_t modification_time;
     int api_version;
-    int file_versions_count;
+    int file_watcher_count;
 } Game_API;
 
 bool copy_dll(const char* to) {
@@ -137,7 +137,7 @@ int main() {
     game_api.init_window();
     game_api.init();
 
-    file_versions_reload();
+    file_watcher_reload();
     
     printf("[HOT_RELOAD] Hot reload system started. Press F5 to force reload, F6 to restart.\n");
     
@@ -151,15 +151,16 @@ int main() {
     while (game_api.should_run()) {
         time_t current_time = time(NULL);
         
-        if ((current_time - last_rebuild_time) >= rebuild_cooldown && file_versions_check()) {
+#ifdef HOT_RELOAD_FILE_WATCHER
+        if ((current_time - last_rebuild_time) >= rebuild_cooldown && file_watcher_check()) {
             printf("[HOT_RELOAD] Files changed, rebuilding...\n");
             last_rebuild_time = current_time;
             
-#ifdef _WIN32
+        #ifdef _WIN32
             int build_result = system("build_hot_reload.bat");
-#else
+        #else
             int build_result = system("./build_hot_reload.sh");
-#endif
+        #endif
             if (build_result == 0) {
                 // Build successful, reload file versions
                 //
@@ -171,7 +172,7 @@ int main() {
                 // So a runtime-readable file that can be reloaded after a successful build is also generated.
                 //
                 // This also makes the hot reload loop not go bonkers when a file is deleted/moved or created.
-                if (file_versions_reload()) {
+                if (file_watcher_reload()) {
                     printf("[HOT_RELOAD] File versions reloaded successfully\n");
                 } else {
                     printf("[HOT_RELOAD] Warning: Failed to reload file versions\n");
@@ -182,6 +183,9 @@ int main() {
         } else {
             game_api.update();
         }
+#else
+        game_api.update();
+#endif
         
         bool force_reload = game_api.force_reload ? game_api.force_reload() : false;
         bool force_restart = game_api.force_restart ? game_api.force_restart() : false;

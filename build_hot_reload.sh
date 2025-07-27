@@ -91,7 +91,7 @@ case $(uname) in
 esac
 
 $CC -g -O0 -std=c99 \
-    -DPLATFORM_DESKTOP -DGRAPHICS_API_OPENGL_33 \
+    -DPLATFORM_DESKTOP -DGRAPHICS_API_OPENGL_33 -DHOT_RELOAD_FILE_WATCHER \
     -Ideps/raylib/src -Isrc \
     src/main_hot_reload.c \
     src/hot_reload/platform_tools.c \

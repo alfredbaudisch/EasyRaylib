@@ -1,7 +1,7 @@
 ﻿# C + Raylib Hot Reload Template
-This is a C + Raylib game template with a Hot Reloading workflow. It makes it possible to make changes to C code and reload it on the fly while the game is running, allowing for very small iteration times.
+This is a C + Raylib game template with a Hot Reloading workflow. It makes it possible to make changes to C code and reload it on the fly while the game is running, allowing for very small iteration times, preserving runtime state.
 
-Once the application is built and running, you don't need to run build commands anymore, hot reload kicks in automatically as soon as you edit and save any source file.
+It also comes with an optional File Watcher (enabled by default): once the application is built and running, you don't need to run build commands anymore, hot reload kicks in automatically as soon as you edit and save any source file.
 
 Supported platforms: macOS (tested), Windows (tested), Linux (untested).
 
@@ -10,17 +10,22 @@ Supported platforms: macOS (tested), Windows (tested), Linux (untested).
 ## How to run the Hot Reload workflow
 - Open the project, run `./build_hot_reload.sh run` (or `./build_hot_reload.bat run`).
 - In VSCode, instead of manually running the build scripts, with `F5`, you can run the tasks `Hot Reload: Build and Run (Linux / Mac)` (or Windows).
-- Make changes to `game.c` (or any other related file, you can also add and remove files, as the hot reload workflow account for added and remove files).
-- Watch as the game reloads as soon as you hit save.
+- Make changes to `game.c` (or any other related file, you can also add and remove files, as the hot reload workflow account for added and removed files).
 - To force rebuild, while the game is running, you can call `./build_hot_reload.sh` (without `run`).
 - In the sample project, you can reload the game library with `F5` or restart it (reset state) with `F6`.
+
+### File Watcher
+- If the File Watcher is active (`-DHOT_RELOAD_FILE_WATCHER` in the build script), the game rebuilds and reloads as soon as you hit save in `game.c` and any other related file.
+- To disable automatic rebuilds with the file watcher, undef `HOT_RELOAD_FILE_WATCHER` (i.e. remove `-DHOT_RELOAD_FILE_WATCHER` from `build_hot_reload.bat` or `build_hot_reload.sh`).
+  - With the file watcher disabled, run the hot reload workflow with `./build_hot_reload.sh run` (or `./build_hot_reload.bat run`), and then anytime you want to hot reload again, run just `./build_hot_reload.sh` (or `./build_hot_reload.bat`), without `run`.
+  - You can also call VSCode's build task `Hot Reload: Build`.
 
 ### How it Works
 - The host hot reload application is in `main_hot_reload.c`.
 - The game/application code goes in `game.c`.
 - For debug and release builds, `main.c` is used instead.
 - In the hot reload workflow, the game is built as a shared library. In the debug and release builds, a standalone application is built.
-- To watch for file changes, additions and removals in real-time, [file_version_builder.c](src/hot_reload/file_version_builder.c) keeps a list of source files and their modification times (into a dev temp file `file_versions.dat`) and [file_versions.h](src/hot_reload/file_versions.h) watches that list.
+- If the file watcher is active (it's on by default), to watch for file changes, additions and removals in real-time, [file_version_builder.c](src/hot_reload/file_version_builder.c) builds a list of source files and their modification times into a dev temp file `file_versions.dat` and [file_watcher.h](src/hot_reload/file_watcher.h) watches that list.
 
 ## Extra Features
 - For Debug and Release the project can be built with either make or CMake, as it contains essential Makefile and CMake files.
