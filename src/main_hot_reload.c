@@ -151,7 +151,7 @@ int main() {
     while (game_api.should_run()) {
         time_t current_time = time(NULL);
         
-        if (file_versions_check() && (current_time - last_rebuild_time) >= rebuild_cooldown) {
+        if ((current_time - last_rebuild_time) >= rebuild_cooldown && file_versions_check()) {
             printf("[HOT_RELOAD] Files changed, rebuilding...\n");
             last_rebuild_time = current_time;
             
