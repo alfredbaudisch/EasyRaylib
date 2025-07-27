@@ -35,16 +35,16 @@ bool file_versions_reload() {
 
     for (int i = 0; i < new_count; i++) {
         char path[512];
-        time_t mod_time;
+        long long mod_time_ll;
         
-        if (fscanf(file, "%511s %ld\n", path, &mod_time) != 2) {
+        if (fscanf(file, "%511s %lld\n", path, &mod_time_ll) != 2) {
             printf("[FILE_VERSIONS] Failed to read file entry %d\n", i);
             fclose(file);  
             return false;
         }
 
         file_versions[i].path = strdup(path);
-        file_versions[i].modification_time = mod_time;
+        file_versions[i].modification_time = (time_t)mod_time_ll;
     }
 
     fclose(file);
@@ -65,8 +65,8 @@ bool file_versions_check() {
             }
         }
         if (mod_time != file_versions[i].modification_time) {
-            printf("[FILE_VERSIONS] File %s has changed (disk: %ld, memory: %ld)\n", 
-                   file_versions[i].path, mod_time, file_versions[i].modification_time);
+            printf("[FILE_VERSIONS] File %s has changed (disk: %lld, memory: %lld)\n", 
+                   file_versions[i].path, (long long)mod_time, (long long)file_versions[i].modification_time);
             return true;
         }
     }
