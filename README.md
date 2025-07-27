@@ -39,7 +39,17 @@ To update:
 git submodule update --recursive
 ```
 
-## Building for Debug and Release
+## Requirements
+#### MacOS
+The same requirements as raylib.
+
+#### Windows
+- MSYS2 with GCC tooling: https://www.msys2.org/
+  - After installing it, run in the MSYS2 MINGW64 terminal: `pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain`
+  - Add the MSYS2 and mingw64 paths to PATH, example: `C:\msys64\ucrt64\bin`.
+  - For more, see https://code.visualstudio.com/docs/cpp/config-mingw
+
+## Building for Debug and Release (WITHOUT hot reload)
 To build for Debug or Release, `main.c` is used instead of `main_hot_reload.c`. It's possible to build with `make` or `CMake`.
 
 ### Make
@@ -60,16 +70,6 @@ In case CMake uses Visual Studio by default and compilation is failing, force CM
 - Set the env variable `CMAKE_GENERATOR="MinGW Makefiles"`.
 - Call with `cmake -G "MinGW Makefiles" ..`. Example: `cmake -DCMAKE_BUILD_TYPE=Release -G "MinGW Makefiles" ..`.
   - Notice that it has to be called with `-G "MinGW Makefiles"` only once, when generating the project. Calls to `--build` won't require the parameter.
-
-### Requirements
-#### MacOS
-The same requirements as raylib.
-
-#### Windows
-- MSYS2 with GCC tooling: https://www.msys2.org/
-  - After installing it, run in the MSYS2 MINGW64 terminal: `pacman -S mingw-w64-ucrt-x86_64-gcc`
-  - Add the MSYS2 and mingw64 paths to PATH, example: `C:\Dev\msys2\usr\bin` and `C:\Dev\msys2\mingw64\bin`.
-- CMake
 
 ## A note about the Raylib generated API and Raylib version
 - [raylib_api.gen.h](src/hot_reload/raylib_api.gen.h) is used by the hot reload workflow. `raylib_api.gen.h` is transparent during development, as long as `HOT_RELOAD` is not defined in the editor/IDE, it's `raylib.h` that will normally show up in auto completions and the like. 
