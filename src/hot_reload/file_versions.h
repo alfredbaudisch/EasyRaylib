@@ -35,16 +35,16 @@ bool file_versions_reload() {
 
     for (int i = 0; i < new_count; i++) {
         char path[512];
-        time_t mod_time;
+        long long mod_time_ll;
         
-        if (fscanf(file, "%511s %ld\n", path, &mod_time) != 2) {
+        if (fscanf(file, "%511s %lld\n", path, &mod_time_ll) != 2) {
             printf("[FILE_VERSIONS] Failed to read file entry %d\n", i);
             fclose(file);  
             return false;
         }
 
         file_versions[i].path = strdup(path);
-        file_versions[i].modification_time = mod_time;
+        file_versions[i].modification_time = (time_t)mod_time_ll;
     }
 
     fclose(file);
@@ -57,7 +57,11 @@ bool file_versions_check() {
         if (mod_time == 0) {
             printf("[FILE_VERSIONS] Failed getting modification time of %s, maybe deleted? Rebuilding file versions and hot reloading...\n", file_versions[i].path);
 
+#ifdef _WIN32
+            int build_result = system("build_hot_reload.bat");
+#else
             int build_result = system("./build_hot_reload.sh");
+#endif
             if (build_result != 0) {
                 printf("[FILE_VERSIONS] Build failed with exit code: %d\n", build_result);
                 exit(1);
@@ -65,8 +69,8 @@ bool file_versions_check() {
             }
         }
         if (mod_time != file_versions[i].modification_time) {
-            printf("[FILE_VERSIONS] File %s has changed (disk: %ld, memory: %ld)\n", 
-                   file_versions[i].path, mod_time, file_versions[i].modification_time);
+            printf("[FILE_VERSIONS] File %s has changed (disk: %lld, memory: %lld)\n", 
+                   file_versions[i].path, (long long)mod_time, (long long)file_versions[i].modification_time);
             return true;
         }
     }

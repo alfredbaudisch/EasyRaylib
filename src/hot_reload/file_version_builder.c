@@ -194,7 +194,7 @@ int main() {
     
     fprintf(data_file, "%d\n", version_count);
     for (int i = 0; i < version_count; i++) {
-        fprintf(data_file, "%s %ld\n", versions[i].path, (long)versions[i].modification_time);
+        fprintf(data_file, "%s %lld\n", versions[i].path, (long long)versions[i].modification_time);
     }
     fclose(data_file);
     
