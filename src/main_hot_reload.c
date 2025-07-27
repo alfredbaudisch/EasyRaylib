@@ -43,8 +43,7 @@ typedef struct {
     bool (*force_restart)(void);
     time_t modification_time;
     int api_version;
-    int file_watcher_count;
-} Game_API;
+} GameAPI;
 
 bool copy_dll(const char* to) {
     char cmd[512];
@@ -63,7 +62,7 @@ bool copy_dll(const char* to) {
     return true;
 }
 
-bool load_game_api(Game_API* api, int api_version) {
+bool load_game_api(GameAPI* api, int api_version) {
     time_t mod_time = platform_get_modification_time(GAME_DLL_PATH);
     if (mod_time == 0) {
         printf("[HOT_RELOAD] Failed getting modification time of %s\n", GAME_DLL_PATH);
@@ -105,7 +104,7 @@ bool load_game_api(Game_API* api, int api_version) {
     return true;
 }
 
-void unload_game_api(Game_API* api) {
+void unload_game_api(GameAPI* api) {
     if (api->lib) {
         platform_free_library(api->lib);
         api->lib = NULL;
@@ -121,7 +120,7 @@ int main() {
     platform_create_directory(GAME_DLL_DIR);
     
     int game_api_version = 0;
-    Game_API game_api = {0};
+    GameAPI game_api = {0};
     
     if (!load_game_api(&game_api, game_api_version)) {
         printf("[HOT_RELOAD] Failed to load Game API\n");
@@ -142,7 +141,7 @@ int main() {
     printf("[HOT_RELOAD] Hot reload system started. Press F5 to force reload, F6 to restart.\n");
     
     // Keep track of old APIs for cleanup
-    Game_API old_game_apis[32];
+    GameAPI old_game_apis[32];
     int old_api_count = 0;
     time_t last_rebuild_time = 0;
     const time_t rebuild_cooldown = 2;
@@ -200,7 +199,7 @@ int main() {
         if (reload) {
             printf("[HOT_RELOAD] Reloading game library...\n");
             
-            Game_API new_game_api = {0};
+            GameAPI new_game_api = {0};
             if (load_game_api(&new_game_api, game_api_version)) {
                 // Check if we need a full restart
                 bool need_restart = force_restart;
@@ -215,7 +214,7 @@ int main() {
                         old_game_apis[old_api_count++] = game_api;
                     } else {
                         unload_game_api(&old_game_apis[0]);
-                        memmove(old_game_apis, old_game_apis + 1, sizeof(Game_API) * 31);
+                        memmove(old_game_apis, old_game_apis + 1, sizeof(GameAPI) * 31);
                         old_game_apis[31] = game_api;
                     }
                     
