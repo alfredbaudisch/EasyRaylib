@@ -157,10 +157,16 @@ int main() {
             printf("[HOT_RELOAD] Files changed, rebuilding...\n");
             last_rebuild_time = current_time;
             
-        #ifdef _WIN32
-            int build_result = system("build_hot_reload.bat");
+        #ifdef BUILD_TYPE_DEBUG
+            #ifndef _WIN32
+            int build_result = system("./build_hot_reload_debug.sh");
+            #endif
         #else
+            #ifdef _WIN32
+            int build_result = system("build_hot_reload.bat");
+            #else
             int build_result = system("./build_hot_reload.sh");
+            #endif
         #endif
             if (build_result == 0) {
                 // Build successful, reload file versions

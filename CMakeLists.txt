@@ -118,7 +118,8 @@ if(HOT_RELOAD)
     )
     target_compile_definitions(${PROJECT_NAME}_hot_reload PRIVATE 
         -DHOT_RELOAD_FILE_WATCHER
-        -DGAME_DLL_DIR=\"./\"
+        -DBUILD_TYPE_DEBUG
+        -DGAME_DLL_DIR=\"build_debug/hot_reload/\"
     )
     target_compile_options(${PROJECT_NAME}_hot_reload PRIVATE ${GAME_FLAGS})
     target_include_directories(${PROJECT_NAME}_hot_reload PRIVATE src)
@@ -151,11 +152,6 @@ if(HOT_RELOAD)
     
     # Make sure game_shared is built before the hot reload executable
     add_dependencies(${PROJECT_NAME}_hot_reload game_shared)
-
-    add_custom_command(TARGET ${PROJECT_NAME}_hot_reload POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/resources ${HOT_RELOAD_DIR}/resources
-    )
 
 else()
     # Regular Build

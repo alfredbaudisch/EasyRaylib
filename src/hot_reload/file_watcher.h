@@ -57,10 +57,16 @@ bool file_watcher_check() {
         if (mod_time == 0) {
             printf("[FILE_WATCHER] Failed getting modification time of %s, maybe deleted? Rebuilding file versions and hot reloading...\n", file_watcher[i].path);
 
-#ifdef _WIN32
-            int build_result = system("build_hot_reload.bat");
+#ifdef BUILD_TYPE_DEBUG
+        #ifndef _WIN32
+            int build_result = system("./build_hot_reload_debug.sh");
+        #endif
 #else
+        #ifdef _WIN32
+            int build_result = system("build_hot_reload.bat");
+        #else
             int build_result = system("./build_hot_reload.sh");
+        #endif
 #endif
             if (build_result != 0) {
                 printf("[FILE_WATCHER] Build failed with exit code: %d\n", build_result);

@@ -59,7 +59,15 @@ The same requirements as raylib.
 - Run `./build_hot_reload_debug.sh`.
 - You can use debugging tools as normal.
 - To hot reload, call `./build_hot_reload_debug.sh` anytime again, even while the debugger is running.
-- You can also debug on VSCode, for that install the [CodeLLDB extension](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) and then run `Hot Reload: Debug`.
+  - If the file watcher is active (enabled by default, `-DHOT_RELOAD_FILE_WATCHER` in `CMakeLists.txt`), then you don't need to call `./build_hot_reload_debug.sh` again, since hot reload kicks in on every file save, and debugging keeps working.
+- VSCode: install the [CodeLLDB extension](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) and then run `Hot Reload: Debug`.
+- CLion:
+  - Add CMake Profile "Hot Reload Debug"
+    - Options: `-G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug -DHOT_RELOAD=ON`
+    - Build directory: `build_debug`
+  - Run/Debug Configurations:
+    - Select `GameProject_hot_reload`
+    - Working directory: `$ProjectFileDir$`
 
 ### Regular Build Debug (Win, Mac, Linux)
 For the regular build (without hot reload, which uses `main.c`):
@@ -69,7 +77,7 @@ cmake -DCMAKE_BUILD_TYPE=Debug ..
 cmake --build .
 ```
 
-- You can also debug on VSCode, for that install the [CodeLLDB extension](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) and then run `Debug Regular Build`.
+- VSCode: install the [CodeLLDB extension](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) and then run `Debug Regular Build`.
 
 ## Building for Release (WITHOUT hot reload)
 It's possible to build for Release with `make` or `CMake`.
