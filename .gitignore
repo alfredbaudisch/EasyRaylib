@@ -1,5 +1,6 @@
 ﻿.idea/
 build/
+build_debug/
 cmake-build-*/
 .DS_Store
 /src/hot_reload/file_versions.dat

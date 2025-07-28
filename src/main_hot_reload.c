@@ -17,12 +17,14 @@
     #define DLL_EXT ".so"
 #endif
 
-#ifdef _WIN32
-    #define GAME_DLL_DIR "build\\hot_reload\\"
-    #define PATH_SEPARATOR "\\"
-#else
-    #define GAME_DLL_DIR "build/hot_reload/"
-    #define PATH_SEPARATOR "/"
+#ifndef GAME_DLL_DIR
+    #ifdef _WIN32
+        #define GAME_DLL_DIR "build\\hot_reload\\"
+        #define PATH_SEPARATOR "\\"
+    #else
+        #define GAME_DLL_DIR "build/hot_reload/"
+        #define PATH_SEPARATOR "/"
+    #endif
 #endif
 
 #define GAME_DLL_PATH GAME_DLL_DIR "game" DLL_EXT

@@ -2,7 +2,40 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Hot Reload: Build",
+            "label": "mkdir-build",
+            "type": "shell",
+            "command": "mkdir",
+            "args": ["-p", "build"],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "cmake-configure-regular",
+            "type": "shell",
+            "command": "cmake",
+            "args": ["-DCMAKE_BUILD_TYPE=Debug", ".."],
+            "group": "build",
+            "dependsOn": "mkdir-build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/build"
+            }
+        },
+        {
+            "label": "build-hot-reload",
             "type": "shell",
             "windows": {
                 "command": "${workspaceFolder}/build_hot_reload.bat"
@@ -15,11 +48,11 @@
             },
             "group": {
                 "kind": "build",
-                "isDefault": true
+                "isDefault": false
             }
         },
         {
-            "label": "Hot Reload: Build and Run",
+            "label": "build-hot-reload-and-run",
             "type": "shell",
             "windows": {
                 "command": "${workspaceFolder}/build_hot_reload.bat",
@@ -47,138 +80,77 @@
             },
         },
         {
-            "label": "build debug",
-            "type": "process",
-            "command": "make",
-            "args": [
-                "game"
-            ],
-            "windows": {
-                "command": "mingw32-make.exe"
-            },
+            "label": "build-hot-reload-debug",
+            "type": "shell",
+            "command": "./build_hot_reload_debug.sh",
             "group": "build",
-            "problemMatcher": [
-                "$gcc"
-            ]
-        },
-        {
-            "label": "build release",
-            "type": "process",
-            "command": "make",
-            "args": [
-                "MODE=RELEASE",
-                "game"
-            ],
-            "windows": {
-                "command": "mingw32-make.exe"
-            },
-            "group": "build",
-            "problemMatcher": [
-                "$gcc"
-            ]
-        },
-        {
-            "label": "make game",
-            "type": "process",
-            "command": "make",
-            "args": [
-                "game"
-            ],
-            "windows": {
-                "command": "mingw32-make.exe"
-            },
-            "group": "build",
-            "problemMatcher": [
-                "$gcc"
-            ],
             "presentation": {
                 "echo": true,
                 "reveal": "always",
                 "focus": false,
-                "panel": "shared",
-                "showReuseMessage": true,
-                "clear": false
-            }
+                "panel": "shared"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": ["$gcc"]
         },
         {
-            "label": "run game",
-            "type": "process",
-            "command": "./build/game",
-            "windows": {
-                "command": ".\\build\\game.exe"
+            "label": "build-regular",
+            "type": "shell",
+            "command": "make",
+            "args": ["-j4"],
+            "group": "build",
+            "dependsOn": "cmake-configure-regular",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
             },
-            "dependsOn": "build debug",
+            "options": {
+                "cwd": "${workspaceFolder}/build"
+            },
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "clean-regular",
+            "type": "shell",
+            "command": "rm",
+            "args": ["-rf", "build"],
             "group": "build",
             "presentation": {
                 "echo": true,
                 "reveal": "always",
-                "focus": true,
-                "panel": "new",
-                "showReuseMessage": false,
-                "clear": true
+                "focus": false,
+                "panel": "shared"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
             }
         },
         {
-            "label": "clean",
-            "type": "process",
-            "command": "make",
-            "args": [
-                "clean"
-            ],
-            "windows": {
-                "command": "mingw32-make.exe"
+            "label": "clean-debug",
+            "type": "shell",
+            "command": "rm",
+            "args": ["-rf", "build_debug"],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
             },
-            "group": "build",
-            "problemMatcher": [
-                "$gcc"
-            ]
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
         },
+
+        //
+        // Release
+        //
         {
-            "label": "cmake build debug",
-            "type": "process",
-            "command": "cmake",
-            "args": [
-                "--build",
-                "build",
-                "--config",
-                "Debug"
-            ],
-            "dependsOn": "cmake configure debug",
-            "group": "build",
-            "problemMatcher": [
-                "$gcc"
-            ]
-        },
-        {
-            "label": "cmake build release",
-            "type": "process",
-            "command": "cmake",
-            "args": [
-                "--build",
-                "build",
-                "--config",
-                "Release"
-            ],
-            "dependsOn": "cmake configure release",
-            "group": "build",
-            "problemMatcher": [
-                "$gcc"
-            ]
-        },
-        {
-            "label": "cmake configure debug",
-            "type": "process",
-            "command": "cmake",
-            "args": [
-                "-B",
-                "build",
-                "-DCMAKE_BUILD_TYPE=Debug"
-            ],
-            "group": "build",
-            "problemMatcher": []
-        },
-        {
-            "label": "cmake configure release",
+            "label": "cmake-configure-release",
             "type": "process",
             "command": "cmake",
             "args": [
@@ -187,20 +159,39 @@
                 "-DCMAKE_BUILD_TYPE=Release"
             ],
             "group": "build",
+            "options": {
+                "cwd": "${workspaceFolder}/build"
+            },
             "problemMatcher": []
         },
         {
-            "label": "cmake clean",
+            "label": "build-release-cmake",
             "type": "process",
             "command": "cmake",
             "args": [
                 "--build",
                 "build",
-                "--target",
-                "clean"
+                "--config",
+                "Release"
+            ],
+            "dependsOn": "cmake-configure-release",
+            "group": "build",
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "build-release-make",
+            "type": "process",
+            "command": "make",
+            "args": [
+                "MODE=RELEASE",
+                "game"
             ],
             "group": "build",
-            "problemMatcher": []
+            "problemMatcher": [
+                "$gcc"
+            ]
         }
     ]
 }

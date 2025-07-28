@@ -4,35 +4,86 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-        // Hot Reload configs
-        // Windows configs (only difference from linux/mac is "type" and "program")
         {
             "type": "cppvsdbg",
             "request": "launch",
-            "preLaunchTask": "Hot Reload: Build and Run",
+            "preLaunchTask": "build-hot-reload",
             "name": "Hot Reload: Build and Run (Windows)",
             "args": [],
             "cwd": "${workspaceFolder}",
             "program": "${workspaceFolder}/game_hot_reload.exe",
         },
-
-        // Linux / Mac configs
         {
             "type": "lldb",
             "request": "launch",
-            "preLaunchTask": "Hot Reload: Build and Run",
+            "preLaunchTask": "build-hot-reload",
             "name": "Hot Reload: Build and Run (Linux / Mac)",
             "args": [],
             "cwd": "${workspaceFolder}",
             "program": "${workspaceFolder}/build/hot_reload/game_hot_reload",
         },
-
-        // Make Debug and Release configs
         {
-            "name": "Debug (Make)",
+            "name": "Hot Reload: Debug",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/game",
+            "program": "${workspaceFolder}/build_debug/hot_reload/GameProject_hot_reload",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/build_debug/hot_reload",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "lldb",
+            "preLaunchTask": "build-hot-reload-debug",
+            "additionalSOLibSearchPath": "${workspaceFolder}/build_debug/hot_reload"
+        },
+        {
+            "name": "Hot Reload: Debug (Linux/WSL)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build_debug/hot_reload/GameProject_hot_reload",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/build_debug/hot_reload",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set breakpoint on dlopen to catch shared library loading",
+                    "text": "catch load",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "build-hot-reload-debug",
+            "additionalSOLibSearchPath": "${workspaceFolder}/build_debug/hot_reload"
+        },
+        {
+            "name": "Debug Regular Build",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/GameProject",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/build",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "lldb",
+            "preLaunchTask": "build-regular"
+        },
+
+        //
+        // Release
+        //
+        {
+            "name": "Release (CMake)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/GameProject",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
@@ -47,7 +98,7 @@
                 }
             ],
             "windows": {
-                "program": "${workspaceFolder}/build/game.exe",
+                "program": "${workspaceFolder}/build/Release/GameProject.exe",
                 "miDebuggerPath": "C:/Dev/msys2/mingw64/bin/gdb.exe"
             },
             "osx": {
@@ -56,7 +107,7 @@
             "linux": {
                 "miDebuggerPath": "/usr/bin/gdb"
             },
-            "preLaunchTask": "build debug"
+            "preLaunchTask": "build-release-cmake"
         },
         {
             "name": "Release (Make)",
@@ -86,69 +137,7 @@
             "linux": {
                 "miDebuggerPath": "/usr/bin/gdb"
             },
-            "preLaunchTask": "build release"
-        },
-
-        // CMake Debug and Release configs
-        {
-            "name": "Debug (CMake)",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/build/GameProject",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": false
-                }
-            ],
-            "windows": {
-                "program": "${workspaceFolder}/build/Debug/GameProject.exe",
-                "miDebuggerPath": "C:/Dev/msys2/mingw64/bin/gdb.exe"
-            },
-            "osx": {
-                "MIMode": "lldb"
-            },
-            "linux": {
-                "miDebuggerPath": "/usr/bin/gdb"
-            },
-            "preLaunchTask": "cmake build debug"
-        },
-        {
-            "name": "Release (CMake)",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/build/GameProject",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": false
-                }
-            ],
-            "windows": {
-                "program": "${workspaceFolder}/build/Release/GameProject.exe",
-                "miDebuggerPath": "C:/Dev/msys2/mingw64/bin/gdb.exe"
-            },
-            "osx": {
-                "MIMode": "lldb"
-            },
-            "linux": {
-                "miDebuggerPath": "/usr/bin/gdb"
-            },
-            "preLaunchTask": "cmake build release"
+            "preLaunchTask": "build-release-make"
         }
     ]
 }

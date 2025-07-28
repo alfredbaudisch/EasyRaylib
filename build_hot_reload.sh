@@ -100,7 +100,7 @@ $CC -g -O0 -std=c99 \
     -o $OUT_DIR/$EXE -ldl
 
 echo "Build complete!"
-echo "  Main executable: $OUT_DIR/$EXE"
+echo "  Executable: $OUT_DIR/$EXE"
 echo "  Game library: $OUT_DIR/game$DLL_EXT"
 echo ""
 

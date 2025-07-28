@@ -1,5 +1,5 @@
 ﻿# C + Raylib Hot Reload Template
-This is a C + Raylib game template with a Hot Reloading workflow. It makes it possible to make changes to C code and reload it on the fly while the game is running, allowing for very small iteration times, preserving runtime state.
+This is a C + Raylib game template with a Hot Reloading workflow. It makes it possible to make changes to C code and reload it on the fly while the game is running, allowing for very small iteration times, preserving runtime state. It's also possible to debug the hot reloaded code (see instructions below).
 
 It also comes with an optional File Watcher (enabled by default): once the application is built and running, you don't need to run build commands anymore, hot reload kicks in automatically as soon as you edit and save any source file.
 
@@ -54,27 +54,46 @@ The same requirements as raylib.
   - Add the MSYS2 and mingw64 paths to PATH, example: `C:\msys64\ucrt64\bin`.
   - For more, see https://code.visualstudio.com/docs/cpp/config-mingw
 
-## Building for Debug and Release (WITHOUT hot reload)
-To build for Debug or Release, `main.c` is used instead of `main_hot_reload.c`. It's possible to build with `make` or `CMake`.
+## Debugging
+### Hot Reload Debug (Mac/Linux only for now)
+- Run `./build_hot_reload_debug.sh`.
+- You can use debugging tools as normal.
+- To hot reload, call `./build_hot_reload_debug.sh` anytime again, even while the debugger is running.
+- You can also debug on VSCode, for that install the [CodeLLDB extension](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) and then run `Hot Reload: Debug`.
 
-### Make
-- Debug: `make`
-- Release: `make MODE=RELEASE`
-- Only the game (to avoid recompiling raylib everytime): `make game` or `make game MODE=RELEASE`
-
-### CMake
+### Regular Build Debug (Win, Mac, Linux)
+For the regular build (without hot reload, which uses `main.c`):
 ```
 mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Debug ..
 cmake --build .
 ```
 
-Or Release (case-sensitive): `-DCMAKE_BUILD_TYPE=Release`.
+- You can also debug on VSCode, for that install the [CodeLLDB extension](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb) and then run `Debug Regular Build`.
 
-In case CMake uses Visual Studio by default and compilation is failing, force CMake to use MinGW. Two ways:
-- Set the env variable `CMAKE_GENERATOR="MinGW Makefiles"`.
-- Call with `cmake -G "MinGW Makefiles" ..`. Example: `cmake -DCMAKE_BUILD_TYPE=Release -G "MinGW Makefiles" ..`.
-  - Notice that it has to be called with `-G "MinGW Makefiles"` only once, when generating the project. Calls to `--build` won't require the parameter.
+## Building for Release (WITHOUT hot reload)
+It's possible to build for Release with `make` or `CMake`.
+
+### Make
+```
+make MODE=RELEASE
+```
+
+- Only the game (to avoid recompiling raylib everytime): `make game` or `make game MODE=RELEASE`.
+- You can also run `Release (Make)` on VSCode.
+
+### CMake
+```
+mkdir build && cd build
+cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake --build .
+```
+
+- You can also run `Release (CMake)` on VSCode.
+- In case CMake uses Visual Studio by default and compilation is failing, force CMake to use MinGW. Two ways:
+  - Set the env variable `CMAKE_GENERATOR="MinGW Makefiles"`.
+  - Call with `cmake -G "MinGW Makefiles" ..`. Example: `cmake -DCMAKE_BUILD_TYPE=Release -G "MinGW Makefiles" ..`.
+    - Notice that it has to be called with `-G "MinGW Makefiles"` only once, when generating the project. Calls to `--build` won't require the parameter.
 
 ## A note about the Raylib generated API and Raylib version
 - [raylib_api.gen.h](src/hot_reload/raylib_api.gen.h) is used by the hot reload workflow. `raylib_api.gen.h` is transparent during development, as long as `HOT_RELOAD` is not defined in the editor/IDE, it's `raylib.h` that will normally show up in auto completions and the like. 
