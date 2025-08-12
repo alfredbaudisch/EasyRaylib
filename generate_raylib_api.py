@@ -23,10 +23,8 @@ def parse_raylib_functions(raylib_h_path):
     with open(raylib_h_path, 'r') as f:
         content = f.read()
     
-    # Find all RLAPI function declarations using a more robust approach
-
     # First, find all lines that start with RLAPI and end with );
-    rlapi_pattern = r'RLAPI[^;]+;'
+    rlapi_pattern = rf'RLAPI[^;]+;'
     declarations = re.findall(rlapi_pattern, content, re.MULTILINE | re.DOTALL)
     
     for decl in declarations:
@@ -44,7 +42,70 @@ def parse_raylib_functions(raylib_h_path):
         
         # Extract return type (everything between RLAPI and function name)
         # Handle cases where there might not be whitespace before function name (e.g., "char *FuncName")
-        return_type_match = re.search(r'RLAPI\s+(.*?)\s*' + re.escape(func_name) + r'\s*\(', decl)
+        return_type_match = re.search(rf'RLAPI\s+(.*?)\s*' + re.escape(func_name) + r'\s*\(', decl)
+        if not return_type_match:
+            continue
+            
+        return_type = return_type_match.group(1).strip()
+        
+        # Parse parameters
+        param_list = []
+        param_names = []
+        
+        if params and params != 'void':
+            # Split parameters and clean them up
+            for param in params.split(','):
+                param = param.strip()
+                if param:
+                    param_list.append(param)
+                    # Handle variadic parameters
+                    if param == '...':
+                        param_names.append('...')
+                    else:
+                        # Extract parameter name (last word, handling pointers)
+                        param_parts = param.split()
+                        if param_parts:
+                            param_name = param_parts[-1]
+                            # Remove array brackets and pointer stars from the name
+                            param_name = re.sub(r'[\[\]*]', '', param_name)
+                            param_names.append(param_name)
+        
+        functions.append({
+            'name': func_name,
+            'snake_name': camel_to_snake(func_name),
+            'return_type': return_type,
+            'params': param_list,
+            'param_names': param_names,
+            'params_str': params if params else 'void'
+        })
+    
+    return functions
+
+def parse_raymath_functions(raymath_h_path):
+    """Parse raymath.h and extract all RMAPI inline function definitions"""
+    functions = []
+    
+    with open(raymath_h_path, 'r') as f:
+        content = f.read()
+    
+    # Pattern for inline function definitions (raymath.h style)
+    inline_pattern = rf'RMAPI\s+[^{{;]+?\([^)]*\)\s*(?=\{{)'
+    declarations = re.findall(inline_pattern, content, re.MULTILINE | re.DOTALL)
+    
+    for decl in declarations:
+        # Clean up the declaration (remove newlines and extra spaces)
+        decl = ' '.join(decl.split())
+        
+        # Find the function name and parameters
+        func_match = re.search(r'(\w+)\s*\(([^)]*)\)\s*$', decl)
+        if not func_match:
+            continue
+            
+        func_name = func_match.group(1)
+        params = func_match.group(2).strip()
+        
+        # Extract return type (everything between RMAPI and function name)
+        return_type_match = re.search(rf'RMAPI\s+(.*?)\s*' + re.escape(func_name) + r'\s*\(', decl)
         if not return_type_match:
             continue
             
@@ -140,6 +201,7 @@ def generate_raylib_api_h(functions):
 // Timestamp: {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 
 #include "raylib.h"
+#include "raymath.h"
 
 typedef struct {{
 {struct_members}
@@ -167,8 +229,10 @@ static inline RaylibAPI* create_raylib_api(void) {{
 def main():
     if len(sys.argv) > 1:
         raylib_h_path = sys.argv[1]
+        raymath_h_path = sys.argv[2]
     else:
         raylib_h_path = "deps/raylib/src/raylib.h"
+        raymath_h_path = "deps/raylib/src/raymath.h"
     
     if not Path(raylib_h_path).exists():
         print(f"Error: {raylib_h_path} not found")
@@ -177,6 +241,11 @@ def main():
     print(f"Parsing {raylib_h_path}...")
     functions = parse_raylib_functions(raylib_h_path)
     print(f"Found {len(functions)} RLAPI functions")
+    
+    print(f"Parsing {raymath_h_path}...")
+    math_functions = parse_raymath_functions(raymath_h_path)
+    print(f"Found {len(math_functions)} RMAPI functions")
+    functions += math_functions
 
     header_content = generate_raylib_api_h(functions)
 

@@ -23,6 +23,7 @@
 #else
     #define EXPORT
     #include "raylib.h"
+    #include "raymath.h"
 #endif
 
 EXPORT void game_hot_reloaded(void* mem);
